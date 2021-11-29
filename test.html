@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<title>MIDI Player Test</title>
+<script src="node_modules/jzz/javascript/JZZ.js"></script>
+<script src="node_modules/jzz-midi-smf/javascript/JZZ.midi.SMF.js"></script>
+<script src="node_modules/jzz-synth-tiny/javascript/JZZ.synth.Tiny.js"></script>
+<script src="node_modules/jzz-gui-player/javascript/JZZ.gui.Player.js"></script>
+</head>
+
+<body>
+
+<h1>JZZ-Uke</h1>
+<p id=uke>Please enable JavaScript!</p>
+
+<script><!--
+document.getElementById('uke').innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
+JZZ.synth.Tiny.register('Web Audio');
+JZZ.addMidiOut('Console Log', JZZ.Widget({ _receive: function(msg) { console.log(msg.toString()); }}));
+document.getElementById('uke').innerHTML = '';
+--></script>
+
+</body>
+</html>
