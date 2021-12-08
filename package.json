@@ -4,7 +4,7 @@
   "description": "coming soon...",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint javascript"
   },
   "keywords": [
     "midi",
@@ -18,7 +18,7 @@
     "jzz-gui-player": "^1.5.2",
     "jzz-midi-smf": "^1.6.4",
     "jzz-synth-tiny": "^1.2.8",
-    "eslint": "^8.3.0",
+    "eslint": "^8.4.1",
     "grunt": "^1.4.1",
     "grunt-contrib-jshint": "^3.1.1",
     "grunt-contrib-uglify": "^5.0.1"
