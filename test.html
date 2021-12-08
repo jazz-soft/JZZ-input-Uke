@@ -17,8 +17,12 @@
 <script><!--
 document.getElementById('uke').innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
 JZZ.synth.Tiny.register('Web Audio');
-JZZ.addMidiOut('Console Log', JZZ.Widget({ _receive: function(msg) { console.log(msg.toString()); }}));
 document.getElementById('uke').innerHTML = '';
+
+var uke = JZZ.input.Uke({ at: 'uke' });
+uke.connect(JZZ().openMidiOut());
+uke.connect(function(msg) { console.log(msg.toString()); });
+
 --></script>
 
 </body>

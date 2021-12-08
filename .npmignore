@@ -1,0 +1,5 @@
+minified
+.*
+Gruntfile.js
+test.*
+!test
