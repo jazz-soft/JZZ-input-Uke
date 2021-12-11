@@ -16,8 +16,49 @@
   var _version = '0.0.0';
   function _name(name, deflt) { return name ? name : deflt; }
 
-  function _strings() {
-    return [JZZ.MIDI.midi('A5'), JZZ.MIDI.midi('E5'), JZZ.MIDI.midi('C5'), JZZ.MIDI.midi('G5')];
+  function _splitx(s, n) {
+    if (!n) return s.length ? undefined : [];
+    for (var i = 1; i <= s.length; i++) {
+      var z = s.substr(0, i);
+      if (typeof JZZ.MIDI.noteValue(z + '9') == 'undefined') break;
+      var a = _splitx(s.substr(i), n - 1);
+      if (a) return [z].concat(a);
+    }
+  }
+
+  function _split(s) {
+    if (!s) return;
+    var a = s.split('-');
+    if (a.length == 4) return a;
+    a = s.split('');
+    if (a.length < 4) return;
+    if (a.length == 4) return a;
+    return _splitx(s, 4);
+  }
+
+  function _strings(s) {
+    var i, n;
+    var r = [];
+    s = _split(s);
+    if (!s) return;
+    for (i = 0; i < 4; i++) {
+      n = JZZ.MIDI.noteValue(s[3 - i]);
+      if (typeof n == 'undefined') {
+        if (i) return; // undefined
+        break;
+      }
+      r.push(n);
+    }
+    if (r.length) return r;
+    for (i = 0; i < 4; i++) {
+      n = JZZ.MIDI.noteValue(s[i] + '9');
+      if (typeof n == 'undefined') return;
+      r.push(n % 12);
+    }
+    for (i = 1; i < 4; i++) while (r[i] < r[i - 1]) r[i] += 12;
+    if (s[0][0] == s[0][0].toLowerCase() && s[1][0] == s[1][0].toUpperCase()) r[0] += 12;
+    while (r[1] < 56) for (i = 0; i < 4; i++) r[i] += 12;
+    return r.reverse();
   }
 
   function _tuning() {
