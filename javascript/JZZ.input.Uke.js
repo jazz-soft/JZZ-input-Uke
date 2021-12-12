@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.0.0';
+  var _version = '0.0.1';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _splitx(s, n) {
@@ -44,7 +44,7 @@
     for (i = 0; i < 4; i++) {
       n = JZZ.MIDI.noteValue(s[3 - i]);
       if (typeof n == 'undefined') {
-        if (i) return; // undefined
+        if (i) return;
         break;
       }
       r.push(n);
@@ -61,8 +61,21 @@
     return r.reverse();
   }
 
-  function _tuning() {
-    return 'gCEA';
+  var _note = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+
+  function _tuningx(x) {
+    var a = [];
+    for (var i = 0; i < 4; i++) a.push(_note[x[3 - i] % 12] + Math.floor(x[3 - i] / 12));
+    return a.join('-');
+  }
+
+  function _tuning(x) {
+    var a = [];
+    for (var i = 0; i < 4; i++) a.push(_note[x[3 - i] % 12]);
+    if (x[3] > x[2]) a[0] = a[0].toLowerCase();
+    a = a.join('-');
+    if ('' + _strings(a) == '' + x) return a;
+    return _tuningx(x);
   }
 
   function Uke(arg) {
@@ -137,5 +150,6 @@
 
   JZZ.input.Uke.strings = _strings;
   JZZ.input.Uke.tuning = _tuning;
+  JZZ.input.Uke.tuningx = _tuningx;
 
 });
