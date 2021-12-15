@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.0.1';
+  var _version = '0.0.2';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _splitx(s, n) {
@@ -56,8 +56,13 @@
       r.push(n % 12);
     }
     for (i = 1; i < 4; i++) while (r[i] < r[i - 1]) r[i] += 12;
-    if (s[0][0] == s[0][0].toLowerCase() && s[1][0] == s[1][0].toUpperCase()) r[0] += 12;
-    while (r[1] < 56) for (i = 0; i < 4; i++) r[i] += 12;
+    var z = 53;
+    if (s[0][0] == s[0][0].toLowerCase() && s[1][0] == s[1][0].toUpperCase()) {
+      r[0] += 12;
+      z = 56;
+    }
+    else if (r[1] % 12 == 9 && r[2] % 12 == 2 && r[3] % 12 == 7) z = 33;
+    while (r[1] < z) for (i = 0; i < 4; i++) r[i] += 12;
     return r.reverse();
   }
 

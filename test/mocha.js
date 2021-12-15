@@ -33,6 +33,30 @@ describe('tuning', function() {
   it('ADF#B', function() {
     assert.deepEqual(UKE.strings('ADF#B'), [71, 66, 62, 57]);
   });
+  it('dGBE', function() {
+    assert.deepEqual(UKE.strings('dGBE'), [76, 71, 67, 74]);
+    assert.equal(UKE.tuning(UKE.strings('d-G-B-E')), 'd-G-B-E');
+  });
+  it('cFAD', function() {
+    assert.deepEqual(UKE.strings('cFAD'), [74, 69, 65, 72]);
+    assert.equal(UKE.tuning(UKE.strings('c-F-A-D')), 'c-F-A-D');
+  });
+  it('DGBE', function() {
+    assert.deepEqual(UKE.strings('DGBE'), [64, 59, 55, 50]);
+    assert.equal(UKE.tuning(UKE.strings('D-G-B-E')), 'D-G-B-E');
+  });
+  it('CGBE', function() {
+    assert.deepEqual(UKE.strings('CGBE'), [64, 59, 55, 48]);
+    assert.equal(UKE.tuning(UKE.strings('C-G-B-E')), 'C-G-B-E');
+  });
+  it('EADG', function() {
+    assert.deepEqual(UKE.strings('EADG'), [43, 38, 33, 28]);
+    assert.equal(UKE.tuning(UKE.strings('E-A-D-G')), 'E-A-D-G');
+  });
+  it('DADG', function() {
+    assert.deepEqual(UKE.strings('DADG'), [43, 38, 33, 26]);
+    assert.equal(UKE.tuning(UKE.strings('D-A-D-G')), 'D-A-D-G');
+  });
   it('bEbe', function() {
     assert.deepEqual(UKE.strings('bEbe'), [76, 71, 64, 71]);
   });
