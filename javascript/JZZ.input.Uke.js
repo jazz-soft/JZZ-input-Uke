@@ -89,9 +89,28 @@
     for (var key in arg) this.params[key] = arg[key];
   }
 
+  function _svg_line(x1, y1, x2, y2) {
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x1);
+    line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2);
+    line.setAttribute("y2", y2);
+    line.setAttribute("stroke", "black");
+    line.setAttribute("vector-effect", "non-scaling-stroke");
+    line.setAttribute("stroke-width", "1px");
+    return line;
+  }
+  function _svg() {
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("version", "1.1");
+    svg.setAttribute("viewBox", "0 0 1 1");
+    svg.appendChild(_svg_line(0, 0, 1, 1));
+    svg.appendChild(_svg_line(0, 1, 1, 0));
+    return svg;
+  }
   Uke.prototype.create = function() {
-    this.dom = document.createElement('div');
-    this.dom.innerHTML = 'This is an Uke!';
+    this.dom =_svg();
+
     this.at = this.params.at;
     if (typeof this.at == 'string') this.at = document.getElementById(this.at);
     try { this.at.appendChild(this.dom); }
@@ -100,6 +119,8 @@
       this.at.appendChild(this.dom);
     }
   };
+
+  Uke.prototype.svg = function() { return this.at.innerHTML; };
 
   Uke.prototype.destroy = function() {
     this.at.removeChild(this.dom);
@@ -124,6 +145,7 @@
     uke.create();
     port._info = this._info(name);
     port._close = function() { uke.destroy(); };
+    port.svg = function() { return uke.svg(); };
     port._resume();
   };
 
