@@ -116,6 +116,7 @@
     try { this.at.appendChild(this.dom); }
     catch(e) {
       this.at = document.createElement('div');
+      document.body.appendChild(this.at);
       this.at.appendChild(this.dom);
     }
   };

@@ -12,14 +12,18 @@
 <body>
 
 <h1>JZZ-input-Uke</h1>
-<p id=uke>Please enable JavaScript!</p>
+<p id="panel">Please enable JavaScript!</p>
 
 <script><!--
-document.getElementById('uke').innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
+var panel = document.getElementById('panel');
+panel.innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
 JZZ.synth.Tiny.register('Web Audio');
-document.getElementById('uke').innerHTML = '';
+panel.innerHTML = '';
+var div = document.createElement('div');
+div.style.width = '300px';
+panel.appendChild(div);
 
-var uke = JZZ.input.Uke({ at: 'uke' });
+var uke = JZZ.input.Uke({ at: div });
 uke.connect(JZZ().openMidiOut());
 uke.connect(function(msg) { console.log(msg.toString()); });
 
