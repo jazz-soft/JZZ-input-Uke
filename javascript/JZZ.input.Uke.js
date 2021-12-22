@@ -84,7 +84,7 @@
   }
 
   function Uke(arg) {
-    this.params = {};
+    this.params = { frets: 18 };
     if (typeof arg == 'undefined') arg = {};
     for (var key in arg) this.params[key] = arg[key];
   }
@@ -100,16 +100,33 @@
     line.setAttribute("stroke-width", "1px");
     return line;
   }
-  function _svg() {
+  function _svg(self) {
+    var ww = .25;
+    var tt = .2;
+    var bb = .2;
+    var wt = .04;
+    var wb = .06;
+    var frets = [];
+    var strings = [.03, .01, -.01, -.03];
+    var i, x, y;
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("version", "1.1");
-    svg.setAttribute("viewBox", "0 0 1 1");
-    svg.appendChild(_svg_line(0, 0, 1, 1));
-    svg.appendChild(_svg_line(0, 1, 1, 0));
+    svg.setAttribute("viewBox", [-ww, -tt, 2 * ww, 1  + tt + bb].join(' '));
+    svg.appendChild(_svg_line(-wt, 0, wt, 0));
+    svg.appendChild(_svg_line(-wb, 1, wb, 1));
+    for (i = 0; i <= self.params.frets; i++) frets.push(1 - Math.pow(2, -i / 12));
+    for (i = 0; i < frets.length; i++) {
+      y = frets[i];
+      x = wt + (wb - wt) * y;
+      svg.appendChild(_svg_line(-x, y, x, y));
+    }
+    svg.appendChild(_svg_line(-wt, 0, -x, y));
+    svg.appendChild(_svg_line(wt, 0, x, y));
+    for (i = 0; i < strings.length; i++) svg.appendChild(_svg_line(strings[i], 0, strings[i] * wb / wt, 1));
     return svg;
   }
   Uke.prototype.create = function() {
-    this.dom =_svg();
+    this.dom =_svg(this);
 
     this.at = this.params.at;
     if (typeof this.at == 'string') this.at = document.getElementById(this.at);
