@@ -17,6 +17,8 @@
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
+  var _wtop = .04;
+  var _wbtm = .06;
   var _frets = [];
   for (i = 0; i < 25; i++) _frets.push(1 - Math.pow(2, -i / 12));
 
@@ -116,12 +118,21 @@
     circle.setAttribute("stroke-width", "1px");
     return circle;
   }
+  function _svg_finger() {
+    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", 0);
+    circle.setAttribute("cy", 0);
+    circle.setAttribute("r", .01);
+    circle.setAttribute("stroke", "black");
+    circle.setAttribute("fill", "none");
+    circle.setAttribute("vector-effect", "non-scaling-stroke");
+    circle.setAttribute("stroke-width", "1px");
+    return circle;
+  }
   function _svg(self) {
     var ww = .25;
     var tt = .2;
     var bb = .2;
-    var wt = .04;
-    var wb = .06;
     var frets = [];
     var strings = [.03, .01, -.01, -.03];
     var i, x, y;
@@ -129,22 +140,22 @@
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("version", "1.1");
     svg.setAttribute("viewBox", [-ww, -tt, 2 * ww, 1  + tt + bb].join(' '));
-    svg.appendChild(_svg_line(-wt, 0, wt, 0));
-    svg.appendChild(_svg_line(-wb, 1, wb, 1));
+    svg.appendChild(_svg_line(-_wtop, 0, _wtop, 0));
+    svg.appendChild(_svg_line(-_wbtm, 1, _wbtm, 1));
     for (i = 0; i <= frets; i++) {
       y = _frets[i];
-      x = wt + (wb - wt) * y;
+      x = _wtop + (_wbtm - _wtop) * y;
       svg.appendChild(_svg_line(-x, y, x, y));
     }
-    svg.appendChild(_svg_line(-wt, 0, -x, y));
-    svg.appendChild(_svg_line(wt, 0, x, y));
+    svg.appendChild(_svg_line(-_wtop, 0, -x, y));
+    svg.appendChild(_svg_line(_wtop, 0, x, y));
     if (frets > 4) svg.appendChild(_svg_dot(0, (_frets[4] + _frets[5]) / 2));
     if (frets > 6) svg.appendChild(_svg_dot(0, (_frets[6] + _frets[7]) / 2));
     if (frets > 9) svg.appendChild(_svg_dot(0, (_frets[9] + _frets[10]) / 2));
     if (frets > 11) { svg.appendChild(_svg_dot(-.025, (_frets[11] + _frets[12]) / 2)); svg.appendChild(_svg_dot(.025, (_frets[11] + _frets[12]) / 2)); }
     if (frets > 14) svg.appendChild(_svg_dot(0, (_frets[14] + _frets[15]) / 2));
 
-    for (i = 0; i < strings.length; i++) svg.appendChild(_svg_line(strings[i], 0, strings[i] * wb / wt, 1));
+    for (i = 0; i < strings.length; i++) svg.appendChild(_svg_line(strings[i], 0, strings[i] * _wbtm / _wtop, 1));
     return svg;
   }
   function _handleMouseDown(uke, svg, pt) {
@@ -152,14 +163,29 @@
       pt.x = e.clientX;
       pt.y = e.clientY;
       var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
-console.log(pp.x, pp.y);
+console.log('mouse down', pp.x, pp.y);
+    };
+  }
+  function _handleMouseUp(uke, svg, pt) {
+    return function(e) {
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
+console.log('mouse up', pp.x, pp.y);
     };
   }
   Uke.prototype.create = function() {
     var svg = _svg(this);
     var pt = svg.createSVGPoint();
+    var ff = [];
     this.dom = svg;
+    this.fingers = ff;
+    for (var i = 0; i < 4; i++) {
+      ff[i] = _svg_finger(0, 0);
+      svg.appendChild(ff[i]);
+    }
     svg.addEventListener("mousedown", _handleMouseDown(this, svg, pt));
+    svg.addEventListener("mouseup", _handleMouseUp(this, svg, pt));
 
     this.at = this.params.at;
     if (typeof this.at == 'string') this.at = document.getElementById(this.at);
