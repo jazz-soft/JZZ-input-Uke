@@ -120,8 +120,8 @@
   }
   function _svg_finger() {
     var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", 0);
-    circle.setAttribute("cy", 0);
+    circle.setAttribute("cx", 100);
+    circle.setAttribute("cy", 100);
     circle.setAttribute("r", .01);
     circle.setAttribute("stroke", "black");
     circle.setAttribute("fill", "none");
@@ -158,20 +158,44 @@
     for (i = 0; i < strings.length; i++) svg.appendChild(_svg_line(strings[i], 0, strings[i] * _wbtm / _wtop, 1));
     return svg;
   }
+
+  var _firefoxBug;
+  function _fixBtnUp(e) {
+    if (typeof e.buttons == 'undefined' || e.buttons != _firefoxBug) return e;
+    e.stopPropagation();
+    if (e.button == 0) return {buttons:_firefoxBug^1};
+    if (e.button == 1) return {buttons:_firefoxBug^4};
+    if (e.button == 2) return {buttons:_firefoxBug^2};
+  }
+  function _lftBtnDn(e) { return typeof e.buttons == 'undefined' ? !e.button : e.buttons & 1; }
+  function _lftBtnUp(e) { return typeof e.buttons == 'undefined' ? !e.button : !(e.buttons & 1); }
+  function _watchMouseButtons() {
+    return function(e) {
+      _firefoxBug = e.buttons;
+    };
+  }
   function _handleMouseDown(uke, svg, pt) {
     return function(e) {
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
-console.log('mouse down', pp.x, pp.y);
+      if (_lftBtnDn(e)) {
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
+//console.log('mouse down', pp.x, pp.y);
+uke.finger[0].setAttribute("cx", pp.x);
+uke.finger[0].setAttribute("cy", pp.y);
+      }
+      _firefoxBug = e.buttons;
     };
   }
   function _handleMouseUp(uke, svg, pt) {
     return function(e) {
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
-console.log('mouse up', pp.x, pp.y);
+      e = _fixBtnUp(e);
+      if (_lftBtnUp(e)) {
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
+      }
+      _firefoxBug = e.buttons;
     };
   }
   Uke.prototype.create = function() {
@@ -179,13 +203,18 @@ console.log('mouse up', pp.x, pp.y);
     var pt = svg.createSVGPoint();
     var ff = [];
     this.dom = svg;
-    this.fingers = ff;
+    this.finger = ff;
     for (var i = 0; i < 4; i++) {
       ff[i] = _svg_finger(0, 0);
       svg.appendChild(ff[i]);
     }
-    svg.addEventListener("mousedown", _handleMouseDown(this, svg, pt));
-    svg.addEventListener("mouseup", _handleMouseUp(this, svg, pt));
+    this.watchButtons = _watchMouseButtons();
+    this.mouseUpHandle = _handleMouseUp(this, svg, pt);
+    this.mouseDownHandle = _handleMouseDown(this, svg, pt);
+    svg.addEventListener("mousedown", this.mouseDownHandle);
+    window.addEventListener("mousedown", this.watchButtons);
+    window.addEventListener("mousemove", this.watchButtons);
+    window.addEventListener("mouseup", this.mouseUpHandle);
 
     this.at = this.params.at;
     if (typeof this.at == 'string') this.at = document.getElementById(this.at);
@@ -200,6 +229,12 @@ console.log('mouse up', pp.x, pp.y);
   Uke.prototype.svg = function() { return this.at.innerHTML; };
 
   Uke.prototype.destroy = function() {
+    if (this.watchButtons) {
+      this.dom.removeEventListener("mousedown", this.mouseDownHandle);
+      window.removeEventListener("mousedown", this.watchButtons);
+      window.removeEventListener("mousemove", this.watchButtons);
+      window.removeEventListener("mouseup", this.mouseUpHandle);
+    }
     this.at.removeChild(this.dom);
   };
 
