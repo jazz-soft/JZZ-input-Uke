@@ -97,36 +97,36 @@
   }
 
   function _svg_line(x1, y1, x2, y2) {
-    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", x1);
-    line.setAttribute("y1", y1);
-    line.setAttribute("x2", x2);
-    line.setAttribute("y2", y2);
-    line.setAttribute("stroke", "black");
-    line.setAttribute("vector-effect", "non-scaling-stroke");
-    line.setAttribute("stroke-width", "1px");
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', 'black');
+    line.setAttribute('vector-effect', 'non-scaling-stroke');
+    line.setAttribute('stroke-width', '1px');
     return line;
   }
   function _svg_dot(x, y) {
-    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", x);
-    circle.setAttribute("cy", y);
-    circle.setAttribute("r", .005);
-    circle.setAttribute("stroke", "black");
-    circle.setAttribute("fill", "none");
-    circle.setAttribute("vector-effect", "non-scaling-stroke");
-    circle.setAttribute("stroke-width", "1px");
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', x);
+    circle.setAttribute('cy', y);
+    circle.setAttribute('r', .005);
+    circle.setAttribute('stroke', 'black');
+    circle.setAttribute('fill', 'none');
+    circle.setAttribute('vector-effect', 'non-scaling-stroke');
+    circle.setAttribute('stroke-width', '1px');
     return circle;
   }
   function _svg_finger() {
-    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", 100);
-    circle.setAttribute("cy", 100);
-    circle.setAttribute("r", .01);
-    circle.setAttribute("stroke", "black");
-    circle.setAttribute("fill", "none");
-    circle.setAttribute("vector-effect", "non-scaling-stroke");
-    circle.setAttribute("stroke-width", "1px");
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', 100);
+    circle.setAttribute('cy', 100);
+    circle.setAttribute('r', .01);
+    circle.setAttribute('stroke', 'black');
+    circle.setAttribute('fill', 'none');
+    circle.setAttribute('vector-effect', 'non-scaling-stroke');
+    circle.setAttribute('stroke-width', '1px');
     return circle;
   }
   function _svg(self) {
@@ -137,26 +137,28 @@
     var strings = [.03, .01, -.01, -.03];
     var i, x, y;
     var frets = self.params.frets;
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("version", "1.1");
-    svg.setAttribute("viewBox", [-ww, -tt, 2 * ww, 1  + tt + bb].join(' '));
-    svg.appendChild(_svg_line(-_wtop, 0, _wtop, 0));
-    svg.appendChild(_svg_line(-_wbtm, 1, _wbtm, 1));
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('version', '1.1');
+    svg.setAttribute('viewBox', [-ww, -tt, 2 * ww, 1  + tt + bb].join(' '));
+    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    svg.appendChild(g);
+    g.appendChild(_svg_line(-_wtop, 0, _wtop, 0));
+    g.appendChild(_svg_line(-_wbtm, 1, _wbtm, 1));
     for (i = 0; i <= frets; i++) {
       y = _frets[i];
       x = _wtop + (_wbtm - _wtop) * y;
-      svg.appendChild(_svg_line(-x, y, x, y));
+      g.appendChild(_svg_line(-x, y, x, y));
     }
-    svg.appendChild(_svg_line(-_wtop, 0, -x, y));
-    svg.appendChild(_svg_line(_wtop, 0, x, y));
-    if (frets > 4) svg.appendChild(_svg_dot(0, (_frets[4] + _frets[5]) / 2));
-    if (frets > 6) svg.appendChild(_svg_dot(0, (_frets[6] + _frets[7]) / 2));
-    if (frets > 9) svg.appendChild(_svg_dot(0, (_frets[9] + _frets[10]) / 2));
-    if (frets > 11) { svg.appendChild(_svg_dot(-.025, (_frets[11] + _frets[12]) / 2)); svg.appendChild(_svg_dot(.025, (_frets[11] + _frets[12]) / 2)); }
-    if (frets > 14) svg.appendChild(_svg_dot(0, (_frets[14] + _frets[15]) / 2));
+    g.appendChild(_svg_line(-_wtop, 0, -x, y));
+    g.appendChild(_svg_line(_wtop, 0, x, y));
+    if (frets > 4) g.appendChild(_svg_dot(0, (_frets[4] + _frets[5]) / 2));
+    if (frets > 6) g.appendChild(_svg_dot(0, (_frets[6] + _frets[7]) / 2));
+    if (frets > 9) g.appendChild(_svg_dot(0, (_frets[9] + _frets[10]) / 2));
+    if (frets > 11) { g.appendChild(_svg_dot(-.025, (_frets[11] + _frets[12]) / 2)); g.appendChild(_svg_dot(.025, (_frets[11] + _frets[12]) / 2)); }
+    if (frets > 14) g.appendChild(_svg_dot(0, (_frets[14] + _frets[15]) / 2));
 
-    for (i = 0; i < strings.length; i++) svg.appendChild(_svg_line(strings[i], 0, strings[i] * _wbtm / _wtop, 1));
-    return svg;
+    for (i = 0; i < strings.length; i++) g.appendChild(_svg_line(strings[i], 0, strings[i] * _wbtm / _wtop, 1));
+    return [svg, g];
   }
 
   var _firefoxBug;
@@ -174,68 +176,75 @@
       _firefoxBug = e.buttons;
     };
   }
-  function _handleMouseDown(uke, svg, pt) {
+  function _handleMouseDown(uke, pt) {
     return function(e) {
       if (_lftBtnDn(e)) {
         pt.x = e.clientX;
         pt.y = e.clientY;
-        var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
-//console.log('mouse down', pp.x, pp.y);
-uke.finger[0].setAttribute("cx", pp.x);
-uke.finger[0].setAttribute("cy", pp.y);
+        var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
+console.log('mouse down', pp.x, pp.y);
+uke._finger[0].setAttribute('cx', pp.x);
+uke._finger[0].setAttribute('cy', pp.y);
       }
       _firefoxBug = e.buttons;
     };
   }
-  function _handleMouseUp(uke, svg, pt) {
+  function _handleMouseUp(uke, pt) {
     return function(e) {
       e = _fixBtnUp(e);
       if (_lftBtnUp(e)) {
         pt.x = e.clientX;
         pt.y = e.clientY;
-        var pp =  pt.matrixTransform(svg.getScreenCTM().inverse());
+        var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
       }
       _firefoxBug = e.buttons;
     };
   }
   Uke.prototype.create = function() {
     var svg = _svg(this);
-    var pt = svg.createSVGPoint();
+    var pt = svg[0].createSVGPoint();
     var ff = [];
-    this.dom = svg;
-    this.finger = ff;
+    this._svg = svg[0];
+    this._svgg = svg[1];
+    this._finger = ff;
     for (var i = 0; i < 4; i++) {
       ff[i] = _svg_finger(0, 0);
-      svg.appendChild(ff[i]);
+      this._svgg.appendChild(ff[i]);
     }
     this.watchButtons = _watchMouseButtons();
-    this.mouseUpHandle = _handleMouseUp(this, svg, pt);
-    this.mouseDownHandle = _handleMouseDown(this, svg, pt);
-    svg.addEventListener("mousedown", this.mouseDownHandle);
-    window.addEventListener("mousedown", this.watchButtons);
-    window.addEventListener("mousemove", this.watchButtons);
-    window.addEventListener("mouseup", this.mouseUpHandle);
+    this.mouseUpHandle = _handleMouseUp(this, pt);
+    this.mouseDownHandle = _handleMouseDown(this, pt);
+    this._svg.addEventListener('mousedown', this.mouseDownHandle);
+    window.addEventListener('mousedown', this.watchButtons);
+    window.addEventListener('mousemove', this.watchButtons);
+    window.addEventListener('mouseup', this.mouseUpHandle);
 
     this.at = this.params.at;
     if (typeof this.at == 'string') this.at = document.getElementById(this.at);
-    try { this.at.appendChild(this.dom); }
+    try { this.at.appendChild(this._svg); }
     catch(e) {
       this.at = document.createElement('div');
       document.body.appendChild(this.at);
-      this.at.appendChild(this.dom);
+      this.at.appendChild(this._svg);
     }
   };
 
   Uke.prototype.svg = function() { return this.at.innerHTML; };
+  Uke.prototype.viewbox = function(a, b, c, d) {
+    this._svg.setAttribute('viewBox', [a, b, c, d].join(' '));
+  };
+  Uke.prototype.transform = function(a, b, c, d, e, f) {
+    this._svgg.setAttribute('transform', 'matrix(' + [a, b, c, d, e, f].join(' ') + ')');
+  };
 
   Uke.prototype.destroy = function() {
     if (this.watchButtons) {
-      this.dom.removeEventListener("mousedown", this.mouseDownHandle);
-      window.removeEventListener("mousedown", this.watchButtons);
-      window.removeEventListener("mousemove", this.watchButtons);
-      window.removeEventListener("mouseup", this.mouseUpHandle);
+      this._svg.removeEventListener('mousedown', this.mouseDownHandle);
+      window.removeEventListener('mousedown', this.watchButtons);
+      window.removeEventListener('mousemove', this.watchButtons);
+      window.removeEventListener('mouseup', this.mouseUpHandle);
     }
-    this.at.removeChild(this.dom);
+    this.at.removeChild(this._svg);
   };
 
   function UkeEngine() {}
@@ -258,6 +267,8 @@ uke.finger[0].setAttribute("cy", pp.y);
     port._info = this._info(name);
     port._close = function() { uke.destroy(); };
     port.svg = function() { return uke.svg(); };
+    port.viewbox = function(a, b, c, d) { return uke.viewbox(a, b, c, d); };
+    port.transform = function(a, b, c, d, e, f) { return uke.transform(a, b, c, d, e, f); };
     port._resume();
   };
 

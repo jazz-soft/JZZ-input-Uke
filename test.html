@@ -25,6 +25,8 @@ div.style.backgroundColor = '#ffe';
 panel.appendChild(div);
 
 var uke = JZZ.input.Uke({ at: div });
+uke.viewbox(-.4, 0, 1, 1);
+uke.transform(-2, 0, 0, 1, 0, 0);
 uke.connect(JZZ().openMidiOut());
 uke.connect(function(msg) { console.log(msg.toString()); });
 
