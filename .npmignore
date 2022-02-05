@@ -1,5 +1,5 @@
-minified
 .*
+minified
 Gruntfile.js
 test.*
 !test
