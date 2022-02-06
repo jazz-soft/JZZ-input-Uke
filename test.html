@@ -12,9 +12,16 @@
 <body>
 
 <h1>JZZ-input-Uke</h1>
+<div id="player"></div>
 <p id="panel">Please enable JavaScript!</p>
 
 <script><!--
+var data = atob('\
+TVRoZAAAAAYAAAABAGBNVHJrAAAA1ADAGADBGADCGADDGACSPH9ggjxAAJI+f2CCPkAAkUB/YIFAQACRQ\
+X9ggUFAAJFDf2CBQ0AAkEV/YIBFQACQR39ggEdAAJBIf2CASEAAk0N/AJI8fwCRQH8AkEh/gUCDQ38Agj\
+x/AIFAfwCASH8Ak0V/AJI9fwCRQH8AkEV/gUCDRX8Agj1/AIFAfwCARX8Ak0N/AJI+fwCRQ38AkEd/gUC\
+DQ38Agj5/AIFDfwCAR38Ak0N/AJI8fwCRQH8AkEh/gUCDQ38Agjx/AIFAfwCASH8A/y8A');
+
 var panel = document.getElementById('panel');
 panel.innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
 JZZ.synth.Tiny.register('Web Audio');
@@ -30,6 +37,8 @@ uke.transform(-2, 0, 0, 1, 0, 0);
 uke.connect(JZZ().openMidiOut());
 uke.connect(function(msg) { console.log(msg.toString()); });
 
+var player = JZZ.gui.Player({at: 'player'});
+player.load(new JZZ.MIDI.SMF(data));
 --></script>
 
 </body>
