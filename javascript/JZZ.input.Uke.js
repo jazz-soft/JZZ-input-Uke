@@ -133,7 +133,6 @@
     var ww = .25;
     var tt = .2;
     var bb = .2;
-    var frets = [];
     var strings = [.03, .01, -.01, -.03];
     var i, x, y;
     var frets = self.params.frets;

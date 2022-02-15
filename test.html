@@ -17,10 +17,10 @@
 
 <script><!--
 var data = atob('\
-TVRoZAAAAAYAAAABAGBNVHJrAAAA1ADAGADBGADCGADDGACSPH9ggjxAAJI+f2CCPkAAkUB/YIFAQACRQ\
-X9ggUFAAJFDf2CBQ0AAkEV/YIBFQACQR39ggEdAAJBIf2CASEAAk0N/AJI8fwCRQH8AkEh/gUCDQ38Agj\
-x/AIFAfwCASH8Ak0V/AJI9fwCRQH8AkEV/gUCDRX8Agj1/AIFAfwCARX8Ak0N/AJI+fwCRQ38AkEd/gUC\
-DQ38Agj5/AIFDfwCAR38Ak0N/AJI8fwCRQH8AkEh/gUCDQ38Agjx/AIFAfwCASH8A/y8A');
+TVRoZAAAAAYAAAABAGBNVHJrAAAAyACSPH9ggjxAAJI+f2CCPkAAkUB/YIFAQACRQX9ggUFAAJFDf2CBQ\
+0AAkEV/YIBFQACQR39ggEdAAJBIf2CASEAAk0N/DJI8fwyRQH8MkEh/gRyDQ38Agjx/AIFAfwCASH8Ak0\
+V/DJI9fwyRQH8MkEV/gRyDRX8Agj1/AIFAfwCARX8Ak0N/DJI+fwyRQ38MkEd/gRyDQ38Agj5/AIFDfwC\
+AR38Ak0N/DJI8fwyRQH8MkEh/gRyDQ38Agjx/AIFAfwCASH8A/y8A');
 
 var panel = document.getElementById('panel');
 panel.innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
@@ -31,14 +31,18 @@ div.style.width = '300px';
 div.style.backgroundColor = '#ffe';
 panel.appendChild(div);
 
+var player = JZZ.gui.Player({at: 'player'});
+player.load(new JZZ.MIDI.SMF(data));
+player.onConnect = function(name) { player.program(0, 24).program(1, 24).program(2, 24).program(3, 24); };
+
 var uke = JZZ.input.Uke({ at: div });
 uke.viewbox(-.4, 0, 1, 1);
 uke.transform(-2, 0, 0, 1, 0, 0);
-uke.connect(JZZ().openMidiOut());
+
+player.connect(uke);
+uke.connect(player);
 uke.connect(function(msg) { console.log(msg.toString()); });
 
-var player = JZZ.gui.Player({at: 'player'});
-player.load(new JZZ.MIDI.SMF(data));
 --></script>
 
 </body>
