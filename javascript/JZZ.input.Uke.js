@@ -90,10 +90,11 @@
   }
 
   function Uke(arg) {
-    this.params = { frets: 18 };
+    this.params = { frets: 18, strings: _strings('gCEA'), channels:[0, 1, 2, 3] };
     if (typeof arg == 'undefined') arg = {};
     for (var key in arg) this.params[key] = arg[key];
     if (this.params.frets != parseInt(this.params.frets) || this.params.frets < 1 || this.params.frets > 24) this.params.frets = 18;
+//console.log(this);
   }
 
   function _svg_line(x1, y1, x2, y2) {
@@ -228,6 +229,17 @@ uke._finger[0].setAttribute('cy', pp.y);
     }
   };
 
+  Uke.prototype.forward = function(msg) {
+    var i, s;
+    var n = msg[1];
+    var ch = msg.getChannel();
+    for (i = 0; i < 4; i++) if (ch == this.params.channels[i]) s = i;
+    if (s >= 0 && s < 3) {
+
+    }
+    this.emit(msg);
+  };
+
   Uke.prototype.svg = function() { return this.at.innerHTML; };
   Uke.prototype.viewbox = function(a, b, c, d) {
     this._svg.setAttribute('viewBox', [a, b, c, d].join(' '));
@@ -264,6 +276,7 @@ uke._finger[0].setAttribute('cy', pp.y);
     uke.connect = function() { port.connect.apply(port, arguments); };
     uke.create();
     port._info = this._info(name);
+    port._receive = function(msg) { uke.forward(msg); };
     port._close = function() { uke.destroy(); };
     port.svg = function() { return uke.svg(); };
     port.viewbox = function(a, b, c, d) { return uke.viewbox(a, b, c, d); };
