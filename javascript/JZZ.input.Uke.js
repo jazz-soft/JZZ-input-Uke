@@ -119,13 +119,13 @@
     circle.setAttribute('stroke-width', '1px');
     return circle;
   }
-  function _svg_finger() {
+  function _svg_finger(gray) {
     var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('cx', 100);
     circle.setAttribute('cy', 100);
     circle.setAttribute('r', .01);
     circle.setAttribute('stroke', 'black');
-    circle.setAttribute('fill', 'none');
+    if (!gray) circle.setAttribute('fill', 'none');
     circle.setAttribute('vector-effect', 'non-scaling-stroke');
     circle.setAttribute('stroke-width', '1px');
     return circle;
@@ -201,15 +201,23 @@ uke._finger[0].setAttribute('cy', pp.y);
     };
   }
   Uke.prototype.create = function() {
+    var i;
     var svg = _svg(this);
     var pt = svg[0].createSVGPoint();
     var ff = [];
+    var pp = [];
     this._svg = svg[0];
     this._svgg = svg[1];
     this._finger = ff;
-    for (var i = 0; i < 4; i++) {
-      ff[i] = _svg_finger(0, 0);
+    this._play = ff;
+    this._playing = [];
+    for (i = 0; i < 4; i++) {
+      ff[i] = _svg_finger();
       this._svgg.appendChild(ff[i]);
+    }
+    for (i = 0; i < 4; i++) {
+      pp[i] = _svg_finger(true);
+      this._svgg.appendChild(pp[i]);
     }
     this.watchButtons = _watchMouseButtons();
     this.mouseUpHandle = _handleMouseUp(this, pt);
@@ -227,7 +235,22 @@ uke._finger[0].setAttribute('cy', pp.y);
       document.body.appendChild(this.at);
       this.at.appendChild(this._svg);
     }
+//console.log(this);
   };
+
+  Uke.prototype._on = function(s, n) {
+    var f = n - this.params.strings[s];
+    this._off(s);
+    if (f >= 0 && f <= this.params.frets) {
+      var x = 0;
+      var y = _frets[f];
+      this._play[s].setAttribute('cx', x);
+      this._play[s].setAttribute('cy', y);
+    }
+  }
+
+  Uke.prototype._off = function(s) {
+  }
 
   Uke.prototype.forward = function(msg) {
     var i, s;
@@ -235,7 +258,8 @@ uke._finger[0].setAttribute('cy', pp.y);
     var ch = msg.getChannel();
     for (i = 0; i < 4; i++) if (ch == this.params.channels[i]) s = i;
     if (s >= 0 && s < 3) {
-
+      if (msg.isNoteOn()) this._on(s, n);
+      else if (msg.isNoteOff()) this._off(i);
     }
     this.emit(msg);
   };
