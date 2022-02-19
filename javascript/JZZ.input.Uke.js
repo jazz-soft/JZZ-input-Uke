@@ -19,6 +19,7 @@
   var i;
   var _wtop = .04;
   var _wbtm = .06;
+  var _str = [.03, .01, -.01, -.03];
   var _frets = [];
   for (i = 0; i < 25; i++) _frets.push(1 - Math.pow(2, -i / 12));
 
@@ -134,7 +135,6 @@
     var ww = .25;
     var tt = .2;
     var bb = .2;
-    var strings = [.03, .01, -.01, -.03];
     var i, x, y;
     var frets = self.params.frets;
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -157,7 +157,7 @@
     if (frets > 11) { g.appendChild(_svg_dot(-.025, (_frets[11] + _frets[12]) / 2)); g.appendChild(_svg_dot(.025, (_frets[11] + _frets[12]) / 2)); }
     if (frets > 14) g.appendChild(_svg_dot(0, (_frets[14] + _frets[15]) / 2));
 
-    for (i = 0; i < strings.length; i++) g.appendChild(_svg_line(strings[i], 0, strings[i] * _wbtm / _wtop, 1));
+    for (i = 0; i < _str.length; i++) g.appendChild(_svg_line(_str[i], 0, _str[i] * _wbtm / _wtop, 1));
     return [svg, g];
   }
 
@@ -242,14 +242,16 @@ uke._finger[0].setAttribute('cy', pp.y);
     var f = n - this.params.strings[s];
     this._off(s);
     if (f >= 0 && f <= this.params.frets) {
-      var x = 0;
-      var y = _frets[f];
+      var y = (_frets[f] + (f ? _frets[f - 1] : 0)) / 2;
+      var x = _str[s] * (1 + y * (_wbtm / _wtop - 1));
       this._play[s].setAttribute('cx', x);
       this._play[s].setAttribute('cy', y);
     }
   }
 
   Uke.prototype._off = function(s) {
+    this._play[s].setAttribute('cx', 100);
+    this._play[s].setAttribute('cy', 100);
   }
 
   Uke.prototype.forward = function(msg) {
@@ -257,9 +259,9 @@ uke._finger[0].setAttribute('cy', pp.y);
     var n = msg[1];
     var ch = msg.getChannel();
     for (i = 0; i < 4; i++) if (ch == this.params.channels[i]) s = i;
-    if (s >= 0 && s < 3) {
+    if (s >= 0 && s <= 3) {
       if (msg.isNoteOn()) this._on(s, n);
-      else if (msg.isNoteOff()) this._off(i);
+      else if (msg.isNoteOff()) this._off(s);
     }
     this.emit(msg);
   };
