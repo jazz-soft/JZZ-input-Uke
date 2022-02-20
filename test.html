@@ -27,17 +27,17 @@ panel.innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install<
 JZZ.synth.Tiny.register('Web Audio');
 panel.innerHTML = '';
 var div = document.createElement('div');
-div.style.width = '300px';
+div.style.width = '500px';
 div.style.backgroundColor = '#ffe';
 panel.appendChild(div);
 
-var player = JZZ.gui.Player({at: 'player'});
+var player = JZZ.gui.Player({at: 'player', sndoff: false});
 player.load(new JZZ.MIDI.SMF(data));
 player.onConnect = function(name) { player.program(0, 24).program(1, 24).program(2, 24).program(3, 24); };
 
 var uke = JZZ.input.Uke({ at: div });
-uke.viewbox(-.4, 0, 1, 1);
-uke.transform(-2, 0, 0, 1, 0, 0);
+uke.viewbox(-.4, -.05, 1, 1.06);
+//uke.transform(-2, 0, 0, 1, 0, 0);
 
 player.connect(uke);
 uke.connect(player);

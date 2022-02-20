@@ -22,6 +22,22 @@
   var _str = [.03, .01, -.01, -.03];
   var _frets = [];
   for (i = 0; i < 25; i++) _frets.push(1 - Math.pow(2, -i / 12));
+  function _f2y(f) { return (_frets[f] + (f ? _frets[f - 1] : _frets[11] - _frets[12])) / 2; }
+  function _s2x(s, y) { return _str[s] * (1 + y * (_wbtm / _wtop - 1)); }
+  function _y2f(y) {
+    if (y < _frets[11] - _frets[12]) return -1;
+    for (var i = 0; i < 25; i++) if (y <= _frets[i]) return i;
+    return -1;
+  }
+  function _x2s(x, y) {
+    var w = _wtop * (1 - y) + _wbtm * y;
+    if (x > w) return -1;
+    if (x > w * .5) return 0;
+    if (x > 0) return 1;
+    if (x > -w * .5) return 2;
+    if (x >= -w) return 3;
+    return -1;
+  }
 
   function _splitx(s, n) {
     if (!n) return s.length ? undefined : [];
@@ -95,7 +111,6 @@
     if (typeof arg == 'undefined') arg = {};
     for (var key in arg) this.params[key] = arg[key];
     if (this.params.frets != parseInt(this.params.frets) || this.params.frets < 1 || this.params.frets > 24) this.params.frets = 18;
-//console.log(this);
   }
 
   function _svg_line(x1, y1, x2, y2) {
@@ -182,9 +197,13 @@
         pt.x = e.clientX;
         pt.y = e.clientY;
         var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
-console.log('mouse down', pp.x, pp.y);
-uke._finger[0].setAttribute('cx', pp.x);
-uke._finger[0].setAttribute('cy', pp.y);
+        var f = _y2f(pp.y);
+        if (f >=0 && f <= uke.params.frets) {
+          var s = _x2s(pp.x, pp.y);
+          if (s >= 0 && s <= 3) {
+            uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], f + uke.params.strings[s]));
+          }
+        }
       }
       _firefoxBug = e.buttons;
     };
@@ -242,8 +261,8 @@ uke._finger[0].setAttribute('cy', pp.y);
     var f = n - this.params.strings[s];
     this._off(s);
     if (f >= 0 && f <= this.params.frets) {
-      var y = (_frets[f] + (f ? _frets[f - 1] : 0)) / 2;
-      var x = _str[s] * (1 + y * (_wbtm / _wtop - 1));
+      var y = _f2y(f);
+      var x = _s2x(s, y);
       this._play[s].setAttribute('cx', x);
       this._play[s].setAttribute('cy', y);
     }
