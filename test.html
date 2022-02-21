@@ -33,10 +33,11 @@ panel.appendChild(div);
 
 var player = JZZ.gui.Player({at: 'player', sndoff: false});
 player.load(new JZZ.MIDI.SMF(data));
-player.onConnect = function(name) { player.program(0, 24).program(1, 24).program(2, 24).program(3, 24); };
+player.onSelect = function(name) { player.program(0, 24).program(1, 24).program(2, 24).program(3, 24); };
+player.select();
 
 var uke = JZZ.input.Uke({ at: div });
-uke.viewbox(-.4, -.05, 1, 1.06);
+uke.viewbox(-.4, -.05, .8, 1.06);
 //uke.transform(-2, 0, 0, 1, 0, 0);
 
 player.connect(uke);
