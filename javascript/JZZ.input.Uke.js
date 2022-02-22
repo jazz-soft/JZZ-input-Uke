@@ -13,13 +13,13 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.0.2';
+  var _version = '0.0.3';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
-  var _wtop = .04;
-  var _wbtm = .06;
-  var _str = [.03, .01, -.01, -.03];
+  var _wtop = 0.04;
+  var _wbtm = 0.06;
+  var _str = [0.03, 0.01, -0.01, -0.03];
   var _frets = [];
   for (i = 0; i < 25; i++) _frets.push(1 - Math.pow(2, -i / 12));
   function _f2y(f) { return (_frets[f] + (f ? _frets[f - 1] : _frets[11] - _frets[12])) / 2; }
@@ -32,9 +32,9 @@
   function _x2s(x, y) {
     var w = _wtop * (1 - y) + _wbtm * y;
     if (x > w) return -1;
-    if (x > w * .5) return 0;
+    if (x > w * 0.5) return 0;
     if (x > 0) return 1;
-    if (x > -w * .5) return 2;
+    if (x > -w * 0.5) return 2;
     if (x >= -w) return 3;
     return -1;
   }
@@ -128,7 +128,7 @@
     var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('cx', x);
     circle.setAttribute('cy', y);
-    circle.setAttribute('r', .005);
+    circle.setAttribute('r', 0.005);
     circle.setAttribute('stroke', 'black');
     circle.setAttribute('fill', 'none');
     circle.setAttribute('vector-effect', 'non-scaling-stroke');
@@ -139,7 +139,7 @@
     var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('cx', 100);
     circle.setAttribute('cy', 100);
-    circle.setAttribute('r', .01);
+    circle.setAttribute('r', 0.01);
     circle.setAttribute('stroke', 'black');
     if (!gray) circle.setAttribute('fill', 'none');
     circle.setAttribute('vector-effect', 'non-scaling-stroke');
@@ -147,9 +147,9 @@
     return circle;
   }
   function _svg(self) {
-    var ww = .25;
-    var tt = .2;
-    var bb = .2;
+    var ww = 0.25;
+    var tt = 0.2;
+    var bb = 0.2;
     var i, x, y;
     var frets = self.params.frets;
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -169,7 +169,7 @@
     if (frets > 4) g.appendChild(_svg_dot(0, (_frets[4] + _frets[5]) / 2));
     if (frets > 6) g.appendChild(_svg_dot(0, (_frets[6] + _frets[7]) / 2));
     if (frets > 9) g.appendChild(_svg_dot(0, (_frets[9] + _frets[10]) / 2));
-    if (frets > 11) { g.appendChild(_svg_dot(-.025, (_frets[11] + _frets[12]) / 2)); g.appendChild(_svg_dot(.025, (_frets[11] + _frets[12]) / 2)); }
+    if (frets > 11) { g.appendChild(_svg_dot(-0.025, (_frets[11] + _frets[12]) / 2)); g.appendChild(_svg_dot(0.025, (_frets[11] + _frets[12]) / 2)); }
     if (frets > 14) g.appendChild(_svg_dot(0, (_frets[14] + _frets[15]) / 2));
 
     for (i = 0; i < _str.length; i++) g.appendChild(_svg_line(_str[i], 0, _str[i] * _wbtm / _wtop, 1));
@@ -201,7 +201,9 @@
         if (f >=0 && f <= uke.params.frets) {
           var s = _x2s(pp.x, pp.y);
           if (s >= 0 && s <= 3) {
-            uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], f + uke.params.strings[s]));
+            uke._ps = s;
+            uke._pn = f + uke.params.strings[s];
+            uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], uke._pn));
           }
         }
       }
@@ -215,6 +217,11 @@
         pt.x = e.clientX;
         pt.y = e.clientY;
         var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
+        if (typeof uke._ps != 'undefined') {
+            uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
+            uke._ps = undefined;
+            uke._pn = undefined;
+        }
       }
       _firefoxBug = e.buttons;
     };
@@ -266,12 +273,12 @@
       this._play[s].setAttribute('cx', x);
       this._play[s].setAttribute('cy', y);
     }
-  }
+  };
 
   Uke.prototype._off = function(s) {
     this._play[s].setAttribute('cx', 100);
     this._play[s].setAttribute('cy', 100);
-  }
+  };
 
   Uke.prototype.forward = function(msg) {
     var i, s;
