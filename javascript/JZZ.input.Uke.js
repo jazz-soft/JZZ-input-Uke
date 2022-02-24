@@ -113,8 +113,9 @@
     if (this.params.frets != parseInt(this.params.frets) || this.params.frets < 1 || this.params.frets > 24) this.params.frets = 18;
   }
 
+  var _svgns = 'http://www.w3.org/2000/svg';
   function _svg_line(x1, y1, x2, y2) {
-    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    var line = document.createElementNS(_svgns, 'line');
     line.setAttribute('x1', x1);
     line.setAttribute('y1', y1);
     line.setAttribute('x2', x2);
@@ -125,7 +126,7 @@
     return line;
   }
   function _svg_dot(x, y) {
-    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    var circle = document.createElementNS(_svgns, 'circle');
     circle.setAttribute('cx', x);
     circle.setAttribute('cy', y);
     circle.setAttribute('r', 0.005);
@@ -136,7 +137,7 @@
     return circle;
   }
   function _svg_finger(gray) {
-    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    var circle = document.createElementNS(_svgns, 'circle');
     circle.setAttribute('cx', 100);
     circle.setAttribute('cy', 100);
     circle.setAttribute('r', 0.01);
@@ -152,10 +153,11 @@
     var bb = 0.2;
     var i, x, y;
     var frets = self.params.frets;
-    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    var svg = document.createElementNS(_svgns, 'svg');
     svg.setAttribute('version', '1.1');
+    svg.setAttribute('xmlns', _svgns);
     svg.setAttribute('viewBox', [-ww, -tt, 2 * ww, 1  + tt + bb].join(' '));
-    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    var g = document.createElementNS(_svgns, 'g');
     svg.appendChild(g);
     g.appendChild(_svg_line(-_wtop, 0, _wtop, 0));
     g.appendChild(_svg_line(-_wbtm, 1, _wbtm, 1));
