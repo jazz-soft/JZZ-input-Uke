@@ -197,11 +197,22 @@
         pt.x = e.clientX;
         pt.y = e.clientY;
         var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
+        var s;
         var f = _y2f(pp.y);
         if (f >=0 && f <= uke.params.frets) {
-          var s = _x2s(pp.x, pp.y);
+          s = _x2s(pp.x, pp.y);
           if (s >= 0 && s <= 3) {
             uke._ps = s;
+            uke._pn = f + uke.params.strings[s];
+            uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], uke._pn));
+          }
+        }
+        else if (pp.y > 0 && pp.y < 1) {
+          s = _x2s(pp.x, pp.y);
+          if (s >= 0 && s <= 3) {
+            uke._ps = s;
+            f = uke._chord ? uke._chord[s] : 0;
+            if (f != parseInt(f)) f = 0; 
             uke._pn = f + uke.params.strings[s];
             uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], uke._pn));
           }
