@@ -213,8 +213,7 @@
           s = _x2s(pp.x, pp.y);
           if (s >= 0 && s <= 3) {
             uke._ps = s;
-            f = uke._chord ? uke._chord[s] : 0;
-            if (f != parseInt(f)) f = 0; 
+            f = uke._chord ? uke._chord[s] || 0 : 0;
             uke._pn = f + uke.params.strings[s];
             uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], uke._pn));
           }
@@ -306,8 +305,25 @@
   };
 
   Uke.prototype.chord = function(x) {
+    if (typeof x == 'undefined') {
+      this._chord = undefined;
+      return;
+    }
+    try {
+      var c = [];
+      for (var i = 0; i < 4; i++) {
+        var f = parseInt(x[i]);
+        if (f == x[i] && f >= 0 && f <= this.params.frets) c[i] = f;
+      }
+      this._chord = c;
+    } catch (e) {/**/}
   };
   Uke.prototype.finger = function(s, n) {
+    if (s >= 0 && s <= 4) {
+      if (!this._chord) this._chord = [0, 0, 0, 0];
+      var f = parseInt(n);
+      if (f == n && f >= 0 && f <= this.params.frets) c[s] = f;
+    }
   };
 
   Uke.prototype.svg = function() { return this.at.innerHTML; };
