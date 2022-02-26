@@ -305,6 +305,11 @@
     this.emit(msg);
   };
 
+  Uke.prototype.chord = function(x) {
+  };
+  Uke.prototype.finger = function(s, n) {
+  };
+
   Uke.prototype.svg = function() { return this.at.innerHTML; };
   Uke.prototype.viewbox = function(a, b, c, d) {
     this._svg.setAttribute('viewBox', [a, b, c, d].join(' '));
@@ -346,6 +351,8 @@
     port.svg = function() { return uke.svg(); };
     port.viewbox = function(a, b, c, d) { return uke.viewbox(a, b, c, d); };
     port.transform = function(a, b, c, d, e, f) { return uke.transform(a, b, c, d, e, f); };
+    port.chord = function(a) { uke.chord(a); };
+    port.finger = function(a, b) { uke.finger(a, b); };
     port._resume();
   };
 
