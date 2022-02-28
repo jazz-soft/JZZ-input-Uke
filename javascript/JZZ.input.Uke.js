@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.0.3';
+  var _version = '0.0.4';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
@@ -136,7 +136,7 @@
     circle.setAttribute('stroke-width', '1px');
     return circle;
   }
-  function _svg_finger(fill) {
+  function _svg_o(fill) {
     var circle = document.createElementNS(_svgns, 'circle');
     circle.setAttribute('cx', 100);
     circle.setAttribute('cy', 100);
@@ -146,6 +146,14 @@
     circle.setAttribute('vector-effect', 'non-scaling-stroke');
     circle.setAttribute('stroke-width', '1px');
     return circle;
+  }
+  function _svg_x() {
+    var g = document.createElementNS(_svgns, 'g');
+    var sz = 0.008;
+    g.appendChild(_svg_line(-sz, -sz, sz, sz));
+    g.appendChild(_svg_line(-sz, sz, sz, -sz));
+    g.setAttribute('transform', 'translate(100,100)');
+    return g;
   }
   function _svg(self) {
     var ww = 0.25;
@@ -241,26 +249,31 @@
     var i;
     var svg = _svg(this);
     var pt = svg[0].createSVGPoint();
+    var xx = [];
     var oo = [];
-    //var xx = [];
     var ff = [];
     var pp = [];
     this._svg = svg[0];
     this._svgg = svg[1];
+    this._xx = xx;
     this._oo = oo;
     this._ff = ff;
     this._pp = pp;
     this._playing = [];
     for (i = 0; i < 4; i++) {
-      oo[i] = _svg_finger('none');
+      xx[i] = _svg_x();
+      this._svgg.appendChild(xx[i]);
+    }
+    for (i = 0; i < 4; i++) {
+      oo[i] = _svg_o('none');
       this._svgg.appendChild(oo[i]);
     }
     for (i = 0; i < 4; i++) {
-      ff[i] = _svg_finger('black');
+      ff[i] = _svg_o('black');
       this._svgg.appendChild(ff[i]);
     }
     for (i = 0; i < 4; i++) {
-      pp[i] = _svg_finger('silver');
+      pp[i] = _svg_o('silver');
       this._svgg.appendChild(pp[i]);
     }
     this.watchButtons = _watchMouseButtons();
@@ -279,7 +292,6 @@
       document.body.appendChild(this.at);
       this.at.appendChild(this._svg);
     }
-//console.log(this);
   };
 
   Uke.prototype._on = function(s, n) {
@@ -317,19 +329,29 @@
         var y = _f2y(f);
         var x = _s2x(s, y);
         if (f) {
+          uke._xx[s].setAttribute('transform', 'translate(100,100)');
           uke._oo[s].setAttribute('cx', 100);
           uke._oo[s].setAttribute('cy', 100);
           uke._ff[s].setAttribute('cx', x);
           uke._ff[s].setAttribute('cy', y);
         }
         else {
-          uke._oo[s].setAttribute('cx', x);
-          uke._oo[s].setAttribute('cy', y);
+          if (typeof uke._chord[s] == 'undefined') {
+            uke._xx[s].setAttribute('transform', 'translate(' + x + ',' + y +')');
+            uke._oo[s].setAttribute('cx', 100);
+            uke._oo[s].setAttribute('cy', 100);
+          }
+          else {
+            uke._xx[s].setAttribute('transform', 'translate(100,100)');
+            uke._oo[s].setAttribute('cx', x);
+            uke._oo[s].setAttribute('cy', y);
+          }
           uke._ff[s].setAttribute('cx', 100);
           uke._ff[s].setAttribute('cy', 100);
         }
       }
       else {
+        uke._xx[s].setAttribute('transform', 'translate(100,100)');
         uke._oo[s].setAttribute('cx', 100);
         uke._oo[s].setAttribute('cy', 100);
         uke._ff[s].setAttribute('cx', 100);

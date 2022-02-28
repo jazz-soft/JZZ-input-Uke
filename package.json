@@ -1,6 +1,6 @@
 {
   "name": "jzz-input-uke",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "coming soon...",
   "main": "javascript/JZZ.input.Uke.js",
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "keywords": [
     "midi",
+    "svg",
     "ukulele"
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
