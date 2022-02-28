@@ -136,13 +136,13 @@
     circle.setAttribute('stroke-width', '1px');
     return circle;
   }
-  function _svg_finger(gray) {
+  function _svg_finger(fill) {
     var circle = document.createElementNS(_svgns, 'circle');
     circle.setAttribute('cx', 100);
     circle.setAttribute('cy', 100);
     circle.setAttribute('r', 0.01);
     circle.setAttribute('stroke', 'black');
-    if (!gray) circle.setAttribute('fill', 'none');
+    circle.setAttribute('fill', fill);
     circle.setAttribute('vector-effect', 'non-scaling-stroke');
     circle.setAttribute('stroke-width', '1px');
     return circle;
@@ -228,7 +228,6 @@
       if (_lftBtnUp(e)) {
         pt.x = e.clientX;
         pt.y = e.clientY;
-        var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
         if (typeof uke._ps != 'undefined') {
             uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
             uke._ps = undefined;
@@ -242,19 +241,26 @@
     var i;
     var svg = _svg(this);
     var pt = svg[0].createSVGPoint();
+    var oo = [];
+    //var xx = [];
     var ff = [];
     var pp = [];
     this._svg = svg[0];
     this._svgg = svg[1];
-    this._finger = ff;
-    this._play = ff;
+    this._oo = oo;
+    this._ff = ff;
+    this._pp = pp;
     this._playing = [];
     for (i = 0; i < 4; i++) {
-      ff[i] = _svg_finger();
+      oo[i] = _svg_finger('none');
+      this._svgg.appendChild(oo[i]);
+    }
+    for (i = 0; i < 4; i++) {
+      ff[i] = _svg_finger('black');
       this._svgg.appendChild(ff[i]);
     }
     for (i = 0; i < 4; i++) {
-      pp[i] = _svg_finger(true);
+      pp[i] = _svg_finger('silver');
       this._svgg.appendChild(pp[i]);
     }
     this.watchButtons = _watchMouseButtons();
@@ -282,14 +288,14 @@
     if (f >= 0 && f <= this.params.frets) {
       var y = _f2y(f);
       var x = _s2x(s, y);
-      this._play[s].setAttribute('cx', x);
-      this._play[s].setAttribute('cy', y);
+      this._pp[s].setAttribute('cx', x);
+      this._pp[s].setAttribute('cy', y);
     }
   };
 
   Uke.prototype._off = function(s) {
-    this._play[s].setAttribute('cx', 100);
-    this._play[s].setAttribute('cy', 100);
+    this._pp[s].setAttribute('cx', 100);
+    this._pp[s].setAttribute('cy', 100);
   };
 
   Uke.prototype.forward = function(msg) {
@@ -304,9 +310,38 @@
     this.emit(msg);
   };
 
+  function draw_chord(uke) {
+    for (var s = 0; s < 4; s++) {
+      if (uke._chord) {
+        var f = uke._chord[s] || 0;
+        var y = _f2y(f);
+        var x = _s2x(s, y);
+        if (f) {
+          uke._oo[s].setAttribute('cx', 100);
+          uke._oo[s].setAttribute('cy', 100);
+          uke._ff[s].setAttribute('cx', x);
+          uke._ff[s].setAttribute('cy', y);
+        }
+        else {
+          uke._oo[s].setAttribute('cx', x);
+          uke._oo[s].setAttribute('cy', y);
+          uke._ff[s].setAttribute('cx', 100);
+          uke._ff[s].setAttribute('cy', 100);
+        }
+      }
+      else {
+        uke._oo[s].setAttribute('cx', 100);
+        uke._oo[s].setAttribute('cy', 100);
+        uke._ff[s].setAttribute('cx', 100);
+        uke._ff[s].setAttribute('cy', 100);
+      }
+    }
+  }
+
   Uke.prototype.chord = function(x) {
     if (typeof x == 'undefined') {
       this._chord = undefined;
+      draw_chord(this);
       return;
     }
     try {
@@ -316,13 +351,14 @@
         if (f == x[i] && f >= 0 && f <= this.params.frets) c[i] = f;
       }
       this._chord = c;
+      draw_chord(this);
     } catch (e) {/**/}
   };
   Uke.prototype.finger = function(s, n) {
     if (s >= 0 && s <= 4) {
       if (!this._chord) this._chord = [0, 0, 0, 0];
       var f = parseInt(n);
-      if (f == n && f >= 0 && f <= this.params.frets) c[s] = f;
+      if (f == n && f >= 0 && f <= this.params.frets) this._chord[s] = f;
     }
   };
 
