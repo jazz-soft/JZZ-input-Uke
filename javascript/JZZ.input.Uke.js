@@ -38,6 +38,14 @@
     if (x >= -w) return 3;
     return -1;
   }
+  function _x2n(x, y) { // between the strings
+    var w = (_wtop * (1 - y) + _wbtm * y) * 0.25;
+    if (x > w * 3) return 0;
+    if (x > w) return 1;
+    if (x > -w) return 2;
+    if (x > -w * 3) return 3;
+    return 4;
+  }
 
   function _splitx(s, n) {
     if (!n) return s.length ? undefined : [];
@@ -225,6 +233,24 @@
             uke._pn = f + uke.params.strings[s];
             uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], uke._pn));
           }
+          uke._nn = _x2n(pp.x, pp.y);
+        }
+      }
+      _firefoxBug = e.buttons;
+    };
+  }
+  function _handleMouseMove(uke, pt) {
+    return function(e) {
+      if (_lftBtnDn(e)) {
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
+        if (typeof uke._nn != 'undefined') {
+          var n = _x2n(pp.x, pp.y);
+          if (n != uke._nn) {
+console.log('Mouse Move!!!');
+            uke._nn = n;
+          }
         }
       }
       _firefoxBug = e.buttons;
@@ -240,6 +266,7 @@
             uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
             uke._ps = undefined;
             uke._pn = undefined;
+            uke._pp = undefined;
         }
       }
       _firefoxBug = e.buttons;
@@ -279,7 +306,9 @@
     this.watchButtons = _watchMouseButtons();
     this.mouseUpHandle = _handleMouseUp(this, pt);
     this.mouseDownHandle = _handleMouseDown(this, pt);
+    this.mouseMoveHandle = _handleMouseMove(this, pt);
     this._svg.addEventListener('mousedown', this.mouseDownHandle);
+    this._svg.addEventListener('mousemove', this.mouseMoveHandle);
     window.addEventListener('mousedown', this.watchButtons);
     window.addEventListener('mousemove', this.watchButtons);
     window.addEventListener('mouseup', this.mouseUpHandle);
