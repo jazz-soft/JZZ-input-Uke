@@ -119,6 +119,8 @@
     if (typeof arg == 'undefined') arg = {};
     for (var key in arg) this.params[key] = arg[key];
     if (this.params.frets != parseInt(this.params.frets) || this.params.frets < 1 || this.params.frets > 24) this.params.frets = 18;
+    this._ss = [];
+    this._st = [];
   }
 
   var _svgns = 'http://www.w3.org/2000/svg';
@@ -266,7 +268,7 @@ console.log('Mouse Move!!!');
             uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
             uke._ps = undefined;
             uke._pn = undefined;
-            uke._pp = undefined;
+            uke._nn = undefined;
         }
       }
       _firefoxBug = e.buttons;
@@ -326,6 +328,7 @@ console.log('Mouse Move!!!');
   Uke.prototype._on = function(s, n) {
     var f = n - this.params.strings[s];
     this._off(s);
+    this._ss[s] = n;
     if (f >= 0 && f <= this.params.frets) {
       var y = _f2y(f);
       var x = _s2x(s, y);
@@ -335,6 +338,8 @@ console.log('Mouse Move!!!');
   };
 
   Uke.prototype._off = function(s) {
+    this._ss[s] = undefined;
+    this._st[s] = undefined;
     this._pp[s].setAttribute('cx', 100);
     this._pp[s].setAttribute('cy', 100);
   };
