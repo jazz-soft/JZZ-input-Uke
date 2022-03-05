@@ -241,6 +241,11 @@
       _firefoxBug = e.buttons;
     };
   }
+  function _stop(uke, c, n) {
+    return function() {
+      uke.forward(JZZ.MIDI.noteOff(c, n));
+    }
+  }
   function _handleMouseMove(uke, pt) {
     return function(e) {
       if (_lftBtnDn(e)) {
@@ -250,7 +255,25 @@
         if (typeof uke._nn != 'undefined') {
           var n = _x2n(pp.x, pp.y);
           if (n != uke._nn) {
-console.log('Mouse Move!!!');
+            var a, b, c, s, m;
+            if (n < uke._nn) { a = n; b = uke._nn; }
+            if (n > uke._nn) { a = uke._nn; b = n; }
+            for (s = a; s < b; s++) {
+              if (s != uke._ps) {
+                f = uke._chord ? uke._chord[s] : 0;
+                if (typeof f != 'undefined') {
+                  m = f + uke.params.strings[s];
+                  c = uke.params.channels[s];
+                  uke.forward(JZZ.MIDI.noteOn(c, m));
+                  setTimeout(_stop(uke, c, m), 200);
+                }
+              }
+            }
+            if (typeof uke._ps != 'undefined') {
+              setTimeout(_stop(uke, uke.params.channels[uke._ps], uke._pn), 200);
+              uke._ps = undefined;
+              uke._pn = undefined;
+            }
             uke._nn = n;
           }
         }
