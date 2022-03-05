@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.0.4';
+  var _version = '0.0.5';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
@@ -244,7 +244,7 @@
   function _stop(uke, c, n) {
     return function() {
       uke.forward(JZZ.MIDI.noteOff(c, n));
-    }
+    };
   }
   function _handleMouseMove(uke, pt) {
     return function(e) {
@@ -291,8 +291,8 @@
             uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
             uke._ps = undefined;
             uke._pn = undefined;
-            uke._nn = undefined;
         }
+        uke._nn = undefined;
       }
       _firefoxBug = e.buttons;
     };
