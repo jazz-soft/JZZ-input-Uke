@@ -119,8 +119,8 @@
     if (typeof arg == 'undefined') arg = {};
     for (var key in arg) this.params[key] = arg[key];
     if (this.params.frets != parseInt(this.params.frets) || this.params.frets < 1 || this.params.frets > 24) this.params.frets = 18;
-    this._ss = [];
-    this._st = [];
+    this._sn = [];
+    this._sx = [];
   }
 
   var _svgns = 'http://www.w3.org/2000/svg';
@@ -241,9 +241,13 @@
       _firefoxBug = e.buttons;
     };
   }
-  function _stop(uke, c, n) {
+  var _xxx = 0;
+  function _stop(uke, s, n) {
+    var x = _xxx;
+    uke._sx[s] = x;
+    _xxx++;
     return function() {
-      uke.forward(JZZ.MIDI.noteOff(c, n));
+      if (x == uke._sx[s]) uke.forward(JZZ.MIDI.noteOff(uke.params.channels[s], n));
     };
   }
   function _handleMouseMove(uke, pt) {
@@ -255,7 +259,7 @@
         if (typeof uke._nn != 'undefined') {
           var n = _x2n(pp.x, pp.y);
           if (n != uke._nn) {
-            var a, b, c, s, m;
+            var a, b, f, s, m;
             if (n < uke._nn) { a = n; b = uke._nn; }
             if (n > uke._nn) { a = uke._nn; b = n; }
             for (s = a; s < b; s++) {
@@ -263,14 +267,13 @@
                 f = uke._chord ? uke._chord[s] : 0;
                 if (typeof f != 'undefined') {
                   m = f + uke.params.strings[s];
-                  c = uke.params.channels[s];
-                  uke.forward(JZZ.MIDI.noteOn(c, m));
-                  setTimeout(_stop(uke, c, m), 200);
+                  uke.forward(JZZ.MIDI.noteOn(uke.params.channels[s], m));
+                  setTimeout(_stop(uke, s, m), 200);
                 }
               }
             }
             if (typeof uke._ps != 'undefined') {
-              setTimeout(_stop(uke, uke.params.channels[uke._ps], uke._pn), 200);
+              setTimeout(_stop(uke, uke._ps, uke._pn), 200);
               uke._ps = undefined;
               uke._pn = undefined;
             }
@@ -351,7 +354,7 @@
   Uke.prototype._on = function(s, n) {
     var f = n - this.params.strings[s];
     this._off(s);
-    this._ss[s] = n;
+    this._sn[s] = n;
     if (f >= 0 && f <= this.params.frets) {
       var y = _f2y(f);
       var x = _s2x(s, y);
@@ -361,8 +364,8 @@
   };
 
   Uke.prototype._off = function(s) {
-    this._ss[s] = undefined;
-    this._st[s] = undefined;
+    this._sn[s] = undefined;
+    this._sx[s] = undefined;
     this._pp[s].setAttribute('cx', 100);
     this._pp[s].setAttribute('cy', 100);
   };
