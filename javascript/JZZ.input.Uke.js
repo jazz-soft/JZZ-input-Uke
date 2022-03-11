@@ -224,9 +224,11 @@
             if (uke._sticky) {
               if (!f && uke._chord && uke._chord[s] == 0) {
                 uke.finger(s);
+                uke.onChord();
                 return;
               }
               uke.finger(s, f);
+              uke.onChord();
             }
             uke._ps = s;
             uke._pn = f + uke.params.strings[s];
@@ -426,6 +428,9 @@
 
   Uke.prototype.chord = function(x) {
     if (typeof x == 'undefined') {
+      return this._chord ? this._chord.slice() : undefined;
+    }
+    if (!x) {
       this._chord = undefined;
       draw_chord(this);
       return;
@@ -488,6 +493,7 @@
     uke.send = function() { port.send.apply(port, arguments); };
     uke.emit = function(msg) { port._emit(msg); };
     uke.connect = function() { port.connect.apply(port, arguments); };
+    uke.onChord = function(){ port.onChord(); }
     uke.create();
     port._info = this._info(name);
     port._receive = function(msg) { uke.forward(msg); };
@@ -495,9 +501,10 @@
     port.svg = function() { return uke.svg(); };
     port.viewbox = function(a, b, c, d) { return uke.viewbox(a, b, c, d); };
     port.transform = function(a, b, c, d, e, f) { return uke.transform(a, b, c, d, e, f); };
-    port.chord = function(a) { uke.chord(a); };
+    port.chord = function(a) { return uke.chord(a); };
     port.finger = function(a, b) { uke.finger(a, b); };
     port.sticky = function(b) { uke.sticky(b); };
+    port.onChord = function() {};
     port._resume();
   };
 

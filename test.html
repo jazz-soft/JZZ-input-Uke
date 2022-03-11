@@ -48,6 +48,7 @@ uke.viewbox(-.4, -.05, .8, 1.06);
 player.connect(uke);
 uke.connect(player);
 uke.connect(function(msg) { console.log(msg.toString()); });
+uke.onChord = function() { console.log('chord:', uke.chord()); };
 player.onPlay = clear;
 player.onResume = clear;
 
@@ -69,7 +70,7 @@ function button(html, func, title) {
   return b;
 }
 function clear() {
-  uke.chord();
+  uke.chord(false);
   uke.sticky(false);
 }
 --></script>
