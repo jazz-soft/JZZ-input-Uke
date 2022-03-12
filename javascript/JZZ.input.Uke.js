@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.0.6';
+  var _version = '0.0.7';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
@@ -493,7 +493,7 @@
     uke.send = function() { port.send.apply(port, arguments); };
     uke.emit = function(msg) { port._emit(msg); };
     uke.connect = function() { port.connect.apply(port, arguments); };
-    uke.onChord = function(){ port.onChord(); }
+    uke.onChord = function(){ port.onChord(); };
     uke.create();
     port._info = this._info(name);
     port._receive = function(msg) { uke.forward(msg); };

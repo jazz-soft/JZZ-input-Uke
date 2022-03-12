@@ -1,6 +1,6 @@
 {
   "name": "jzz-input-uke",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "SVG MIDI Ukulele",
   "main": "javascript/JZZ.input.Uke.js",
   "scripts": {
@@ -18,14 +18,14 @@
     "jzz": "^1.4.9"
   },
   "devDependencies": {
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "grunt": "^1.4.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-uglify": "^5.0.1",
     "jzz-gui-player": "^1.5.7",
     "jzz-midi-smf": "^1.6.7",
     "jzz-synth-tiny": "^1.2.8",
-    "mocha": "^9.2.1",
+    "mocha": "^9.2.2",
     "nyc": "^15.1.0"
   },
   "repository": {
