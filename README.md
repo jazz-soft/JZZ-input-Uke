@@ -40,3 +40,26 @@ var JZZ = require('jzz');
 require('jzz-input-uke')(JZZ);
 //...
 ```
+
+## Example HTML
+```html
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/jzz"></script>
+<script src="https://cdn.jsdelivr.net/npm/jzz-synth-tiny"></script>
+<script src="https://cdn.jsdelivr.net/npm/jzz-input-uke"></script>
+</head>
+<body>
+<div id="uke_div"></div>
+<script>
+JZZ.synth.Tiny.register('Web Audio');
+var out = JZZ().openMidiOut();
+var uke = JZZ.input.Uke({ at: "uke_div" });
+uke.viewbox(-3.1, -.15, 3.2, 1.35);
+uke.transform(1, 3, -3, 1, 0, 0)
+uke.connect(out);
+</script>
+</body>
+</html>
+```

@@ -1,6 +1,6 @@
 {
   "name": "jzz-input-uke",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "SVG MIDI Ukulele",
   "main": "javascript/JZZ.input.Uke.js",
   "scripts": {
