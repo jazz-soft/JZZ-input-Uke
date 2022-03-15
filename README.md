@@ -63,3 +63,17 @@ uke.connect(out);
 </body>
 </html>
 ```
+
+## API
+#### Construction
+```js
+var uke = JZZ.input.Uke(args);
+// or
+JZZ.input.Uke.register('My Cool Ukulele', args);
+var uke = JZZ().openMidiIn('My Cool Ukulele');
+```
+where `args` is an object with th optional keys:
+- `at`: DOM element to insert SVG, or its ID as string; default: the bottom of the page;
+- `frets`: number of frets; default: `18`;
+- `strings`: tuning; default: `gCEA`;
+- `channels`: MIDI channels for each string; default: `[0, 1, 2, 3]`
