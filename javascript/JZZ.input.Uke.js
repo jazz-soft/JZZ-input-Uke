@@ -115,11 +115,12 @@
   }
 
   function Uke(arg) {
-    this.params = { frets: 18, strings: _strings('gCEA'), channels:[0, 1, 2, 3] };
+    this.params = { frets: 18, strings: _strings('gCEA'), channels:[0, 1, 2, 3], active: true };
     if (typeof arg == 'undefined') arg = {};
     for (var key in arg) this.params[key] = arg[key];
     if (this.params.frets != parseInt(this.params.frets) || this.params.frets < 1 || this.params.frets > 24) this.params.frets = 18;
     this._sx = [];
+    this._active = !!this.params.active;
   }
 
   var _svgns = 'http://www.w3.org/2000/svg';
@@ -212,7 +213,7 @@
   }
   function _handleMouseDown(uke, pt) {
     return function(e) {
-      if (_lftBtnDn(e)) {
+      if (uke._active && _lftBtnDn(e)) {
         pt.x = e.clientX;
         pt.y = e.clientY;
         var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
@@ -260,7 +261,7 @@
   }
   function _handleMouseMove(uke, pt) {
     return function(e) {
-      if (_lftBtnDn(e)) {
+      if (uke._active && _lftBtnDn(e)) {
         pt.x = e.clientX;
         pt.y = e.clientY;
         var pp =  pt.matrixTransform(uke._svgg.getScreenCTM().inverse());
@@ -295,7 +296,7 @@
   function _handleMouseUp(uke, pt) {
     return function(e) {
       e = _fixBtnUp(e);
-      if (_lftBtnUp(e)) {
+      if (uke._active && _lftBtnUp(e)) {
         pt.x = e.clientX;
         pt.y = e.clientY;
         if (typeof uke._ps != 'undefined') {
@@ -458,6 +459,8 @@
     if (typeof b == 'undefined') b = true;
     this._sticky = !!b;
   };
+  Uke.prototype.enable = function() { this._active = true; };
+  Uke.prototype.disable = function() { this._active = false; };
 
   Uke.prototype.svg = function() { return this.at.innerHTML; };
   Uke.prototype.viewbox = function(a, b, c, d) {
@@ -504,6 +507,8 @@
     port.chord = function(a) { return uke.chord(a); };
     port.finger = function(a, b) { uke.finger(a, b); };
     port.sticky = function(b) { uke.sticky(b); };
+    port.enable = function() { uke.enable(); };
+    port.disable = function() { uke.disable(); };
     port.onChord = function() {};
     port._resume();
   };

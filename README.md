@@ -72,8 +72,17 @@ var uke = JZZ.input.Uke(args);
 JZZ.input.Uke.register('My Cool Ukulele', args);
 var uke = JZZ().openMidiIn('My Cool Ukulele');
 ```
-where `args` is an object with th optional keys:
+`args` is an object with th optional keys:
 - `at`: DOM element to insert SVG, or its ID as string; default: the bottom of the page;
 - `frets`: number of frets; default: `18`;
 - `strings`: tuning; default: `gCEA`;
-- `channels`: MIDI channels for each string; default: `[0, 1, 2, 3]`
+- `channels`: MIDI channels for each string; default: `[0, 1, 2, 3]`;
+- `active`: if `false`, ignore the user interaction; default: `true`
+
+#### Connection
+```
+var midi_in = JZZ().openMidiIn();
+var midi_out = JZZ().openMidiOut();
+midi_in.connect(uke);
+uke.connect(midi_out);
+```
