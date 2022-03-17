@@ -293,16 +293,14 @@
       _firefoxBug = e.buttons;
     };
   }
-  function _handleMouseUp(uke, pt) {
+  function _handleMouseUp(uke) {
     return function(e) {
       e = _fixBtnUp(e);
       if (uke._active && _lftBtnUp(e)) {
-        pt.x = e.clientX;
-        pt.y = e.clientY;
         if (typeof uke._ps != 'undefined') {
-            uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
-            uke._ps = undefined;
-            uke._pn = undefined;
+          uke.forward(JZZ.MIDI.noteOff(uke.params.channels[uke._ps], uke._pn));
+          uke._ps = undefined;
+          uke._pn = undefined;
         }
         uke._nn = undefined;
       }
@@ -341,7 +339,7 @@
       this._svgg.appendChild(pp[i]);
     }
     this.watchButtons = _watchMouseButtons();
-    this.mouseUpHandle = _handleMouseUp(this, pt);
+    this.mouseUpHandle = _handleMouseUp(this);
     this.mouseDownHandle = _handleMouseDown(this, pt);
     this.mouseMoveHandle = _handleMouseMove(this, pt);
     this._svg.addEventListener('mousedown', this.mouseDownHandle);
