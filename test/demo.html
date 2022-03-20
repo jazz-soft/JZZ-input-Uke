@@ -6,10 +6,12 @@
 <script src="../node_modules/jzz-midi-smf/javascript/JZZ.midi.SMF.js"></script>
 <script src=".instrumented/JZZ.input.Uke.js"></script>
 <script src=".instrumented/JZZ.input.Uke.js"></script>
+<script src="fake-svg.js"></script>
 </head>
 <body>
 <div id="uke_div"></div>
 <script>
+//console.log('###', document.createElementNS);
 var out = JZZ().openMidiOut();
 var uke = JZZ.input.Uke({ at: "uke_div" });
 uke.viewbox(-3.1, -.15, 3.2, 1.35);

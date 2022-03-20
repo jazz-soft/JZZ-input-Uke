@@ -4,7 +4,7 @@
   "description": "SVG MIDI Ukulele",
   "main": "javascript/JZZ.input.Uke.js",
   "scripts": {
-    "test": "nyc instrument ./javascript ./test/.instrumented && nyc mocha",
+    "test": "nyc instrument ./javascript ./test/.instrumented && nyc mocha test/mocha.js",
     "lint": "eslint javascript",
     "coverage": "nyc report --reporter=lcov"
   },
