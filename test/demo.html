@@ -17,6 +17,18 @@ var uke = JZZ.input.Uke({ at: "uke_div" });
 uke.viewbox(-3.1, -.15, 3.2, 1.35);
 uke.transform(1, 3, -3, 1, 0, 0)
 uke.connect(out);
+uke.noteOn(2, 'C4', 127);
+uke.noteOn(2, 'C5', 127);
+uke.noteOn(2, 'C6', 127);
+uke.noteOff(2, 'C4');
+uke.noteOff(2, 'C5');
+uke.noteOff(2, 'C6');
+uke.noteOn(4, 'C5', 127);
+uke.noteOff(4, 'C5');
+uke.chord([0, 1, 2]);
+uke.chord();
+uke.sticky();
+uke.sticky(false);
 </script>
 </body>
 </html>
