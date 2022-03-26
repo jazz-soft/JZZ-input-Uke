@@ -8,8 +8,6 @@ const UKE = JZZ.input.Uke;
 var midi_out = new WMT.MidiDst('VIRTUAL MIDI-Out');
 midi_out.connect();
 
-global.__coverage__ = {};
-
 describe('tuning', function() {
   it('gCEA', function() {
     assert.deepEqual(UKE.strings('gCEA'), [69, 64, 60, 67]);
