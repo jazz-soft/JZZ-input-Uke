@@ -74,6 +74,13 @@ describe('tuning', function() {
   });
 });
 
+describe('register', function() {
+  it('register', function() {
+    JZZ.input.Uke.register();
+    JZZ.input.Uke.register('uke');
+  });
+});
+
 describe('in browser', function() {
   before(function() {
     return new Promise(function(resolve) {

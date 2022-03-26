@@ -1,4 +1,5 @@
 (function(global, factory) {
+  /* istanbul ignore next */
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory;
   }
@@ -10,7 +11,6 @@
   }
 })(this, function(JZZ) {
 
-  if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
   var _version = '0.1.1';

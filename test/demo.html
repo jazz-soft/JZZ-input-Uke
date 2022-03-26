@@ -11,9 +11,14 @@
 <body>
 <div id="uke_div"></div>
 <script>
-//console.log('###', document.createElementNS);
 var out = JZZ().openMidiOut();
 var uke = JZZ.input.Uke({ at: 'uke_div' });
+
+JZZ.input.Uke.register({ frets: 1 });
+JZZ.input.Uke.register('uke2', { frets: 1 });
+var uke2 = JZZ().openMidiIn('uke2');
+uke2.close();
+
 uke.viewbox(-3.1, -.15, 3.2, 1.35);
 uke.transform(1, 3, -3, 1, 0, 0)
 var target = document.getElementById('uke_div').children[0];
