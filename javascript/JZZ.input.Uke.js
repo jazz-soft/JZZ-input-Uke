@@ -491,9 +491,7 @@
 
   UkeEngine.prototype._openIn = function(port, name) {
     var uke = new Uke(this._arg);
-    uke.send = function() { port.send.apply(port, arguments); };
     uke.emit = function(msg) { port._emit(msg); };
-    uke.connect = function() { port.connect.apply(port, arguments); };
     uke.onChord = function(){ port.onChord(); };
     uke.create();
     port._info = this._info(name);
