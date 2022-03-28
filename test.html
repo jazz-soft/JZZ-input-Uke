@@ -31,23 +31,31 @@ var panel = document.getElementById('panel');
 panel.innerHTML = 'Please run <tt style="background-color:#bbf;"><b>npm install</b></tt> ...';
 JZZ.synth.Tiny.register('Web Audio');
 panel.innerHTML = '';
-var div = document.createElement('div');
-div.style.width = '500px';
-div.style.backgroundColor = '#ffe';
-panel.appendChild(div);
+var span1 = document.createElement('span');
+span1.style.width = '500px';
+span1.style.display = 'inline-block';
+span1.style.backgroundColor = '#ffe';
+panel.appendChild(span1);
+var span2 = document.createElement('span');
+span2.style.width = '500px';
+span2.style.display = 'inline-block';
+span2.style.backgroundColor = '#eee';
+panel.appendChild(span2);
 
 var player = JZZ.gui.Player({at: 'player', sndoff: false});
 player.load(new JZZ.MIDI.SMF(data));
 player.onSelect = function(name) { player.program(0, 24).program(1, 24).program(2, 24).program(3, 24); };
 player.select();
 
-var uke = JZZ.input.Uke({ at: div });
+var uke = JZZ.input.Uke({ at: span1 });
 uke.viewbox(-.4, -.05, .8, 1.06);
-//uke.transform(-2, 0, 0, 1, 0, 0);
+var uke2 = JZZ.input.Uke({ at: span2, active: false });
+uke2.viewbox(-.4, -.05, .8, 1.06);
 
 player.connect(uke);
 uke.connect(player);
 uke.connect(function(msg) { console.log(msg.toString()); });
+uke.connect(uke2);
 uke.onChord = function() { console.log('chord:', uke.chord()); };
 player.onPlay = clear;
 player.onResume = clear;
