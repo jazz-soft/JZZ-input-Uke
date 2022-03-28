@@ -12,7 +12,8 @@
 <div id="uke_div"></div>
 <script>
 var out = JZZ().openMidiOut();
-var uke = JZZ.input.Uke({ at: 'uke_div' });
+var uke = JZZ.input.Uke('Uke', { at: 'uke_div' });
+var uke1 = JZZ.input.Uke({ active: false });
 
 JZZ.input.Uke.register({ frets: 1 });
 JZZ.input.Uke.register('uke2', { frets: 1 });

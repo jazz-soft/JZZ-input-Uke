@@ -13,7 +13,7 @@
 
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.1.1';
+  var _version = '0.1.2';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
@@ -304,7 +304,7 @@
         }
         uke._nn = undefined;
       }
-      _firefoxBug = e.buttons;
+      setTimeout(function() { _firefoxBug = e.buttons; }, 0);
     };
   }
   Uke.prototype.create = function() {

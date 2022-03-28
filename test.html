@@ -51,6 +51,7 @@ var uke = JZZ.input.Uke({ at: span1 });
 uke.viewbox(-.4, -.05, .8, 1.06);
 var uke2 = JZZ.input.Uke({ at: span2, active: false });
 uke2.viewbox(-.4, -.05, .8, 1.06);
+uke2.transform(-1, 0, 0, 1, 0, 0); // lefty!
 
 player.connect(uke);
 uke.connect(player);
