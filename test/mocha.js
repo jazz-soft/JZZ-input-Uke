@@ -2,7 +2,9 @@ const assert = require('assert');
 const JSDOM = require('jsdom').JSDOM;
 const WMT =  require('web-midi-test');
 const JZZ = require('jzz');
+const version = require('../package.json').version;
 require('..')(JZZ);
+
 const UKE = JZZ.input.Uke;
 
 var midi_out = new WMT.MidiDst('VIRTUAL MIDI-Out');
@@ -76,6 +78,9 @@ describe('register', function() {
   it('register', function() {
     JZZ.input.Uke.register();
     JZZ.input.Uke.register('uke');
+  });
+  it('version', function() {
+    assert.equal(JZZ.input.Uke.version(), version);
   });
 });
 
