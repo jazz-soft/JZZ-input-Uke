@@ -37,11 +37,25 @@ uke.noteOff(2, 'C6');
 uke.noteOn(4, 'C5', 127);
 uke.noteOff(4, 'C5');
 uke.chord([0, 1, 2]);
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: -1, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: -2, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: -5, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: -6, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 uke.chord();
 uke.chord(false);
 uke.chord();
 var svg = uke.svg();
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: -5, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: -5, buttons: 2 })); // right btn
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
+target.dispatchEvent(new MouseEvent('mousedown', { clientX: 0, clientY: 90, buttons: 1 }));
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: -1, buttons: 1 })); //f:0
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
