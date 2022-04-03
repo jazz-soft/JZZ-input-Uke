@@ -42,6 +42,10 @@ target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: -2, clientY: 90, buttons: 1 }));
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: -5, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mousemove', { clientX: -4, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mousemove', { clientX: -3, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 90, buttons: 1 }));
+target.dispatchEvent(new MouseEvent('mousemove', { clientX: -10, clientY: 90, buttons: 1 }));
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: -6, clientY: 90, buttons: 1 }));
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
@@ -52,6 +56,7 @@ var svg = uke.svg();
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: -5, buttons: 1 }));
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: -5, buttons: 2 })); // right btn
+target.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 20, buttons: 2 })); // right btn
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
 target.dispatchEvent(new MouseEvent('mousedown', { clientX: 20, clientY: 90, buttons: 1 }));
 target.dispatchEvent(new MouseEvent('mouseup', { buttons: 0, bubbles: true }));
