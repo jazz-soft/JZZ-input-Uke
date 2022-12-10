@@ -13,7 +13,7 @@
 
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.1.3';
+  var _version = '0.1.5';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
