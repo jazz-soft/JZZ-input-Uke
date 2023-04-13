@@ -41,6 +41,15 @@ require('jzz-input-uke')(JZZ);
 //...
 ```
 
+##### TypeScript / ES6
+
+```ts
+import { JZZ } from 'jzz';
+import { Uke } from 'jzz-input-uke';
+Uke(JZZ);
+//...
+```
+
 ## Example HTML
 ```html
 <!DOCTYPE html>

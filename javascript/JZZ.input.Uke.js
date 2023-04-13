@@ -1,6 +1,7 @@
 (function(global, factory) {
   /* istanbul ignore next */
   if (typeof exports === 'object' && typeof module !== 'undefined') {
+    factory.Uke = factory;
     module.exports = factory;
   }
   else if (typeof define === 'function' && define.amd) {
@@ -13,7 +14,7 @@
 
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '0.1.5';
+  var _version = '0.1.6';
   function _name(name, deflt) { return name ? name : deflt; }
 
   var i;
